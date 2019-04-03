@@ -9,11 +9,5 @@ namespace Server
         {
             Console.WriteLine("Hello World");
         }
-
-        [Command("test")]
-        public void CMD_Test(Client client)
-        {
-            client.SendChatMessage("Test");
-        }
     }
 }
