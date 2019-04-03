@@ -1,5 +1,6 @@
 using GTANetworkAPI;
 using Server.Events;
+using Vehicle = GTANetworkMethods.Vehicle;
 
 namespace Server.DataModels
 {
@@ -10,22 +11,19 @@ namespace Server.DataModels
         private Team team;
         public Team Team
         {
-            get { return team; }
+            get => team;
             set {
-                PlayerChangeTeam.OnPlayerChangeTeam(this, value);
                 team = value;
+                PlayerChangeTeam.OnPlayerChangeTeam(this);
             }
         }
+        
+        public GTANetworkAPI.Vehicle Vehicle { get; set; }
 
         public Player(Client client)
         {
             Client = client;
             Team = Team.None;
-        }
-
-        public void SetTeamSkin(Team newTeam)
-        {
-            Client.SetSkin(newTeam.GetSkin());
         }
     }
 }

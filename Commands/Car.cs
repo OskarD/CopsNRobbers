@@ -7,9 +7,11 @@ namespace Server.Commands
     public class Car : Script
     {
         [Command("car")]
-        public void spawnCar(Client client)
+        public void CMD_Car(Client client)
         {
-            NAPI.Vehicle.CreateVehicle(VehicleHash.ItaliGTB2, client.Position, 0f, 13, 22, "SHARMIN", 255, false, true, UInt32.MinValue);
+            var player = ServerContext.GetPlayer(client);
+            player.Vehicle.Position = client.Position.Around(4f);
+            player.Vehicle.Dimension = client.Dimension;
         }
     }
 }
