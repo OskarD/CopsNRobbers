@@ -9,7 +9,7 @@ namespace Server.Events
         {
             var playerTeam = player.Team;
 
-            player.Client.Team = playerTeam.GetCientTeam();
+            player.Client.Team = playerTeam.GetCientTeam(); // TODO: Delete, API not implemented yet
 
             player.Client.SetSkin(playerTeam.GetSkin());
 
