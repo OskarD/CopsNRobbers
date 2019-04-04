@@ -9,6 +9,8 @@ namespace Server.Events
         {
             var playerTeam = player.Team;
 
+            player.Client.Team = playerTeam.GetCientTeam();
+
             player.Client.SetSkin(playerTeam.GetSkin());
 
             var spawnLocation = playerTeam.GetSpawnLocation();

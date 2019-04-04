@@ -158,6 +158,11 @@ namespace Server.DataModels
             }
         };
 
+        public static int GetCientTeam(this Team team)
+        {
+            return ClientTeam[team];
+        }
+
         public static PedHash GetSkin(this Team team)
         {
             var randomizedIndex = Random.Next(0, Skins[team].Length);
