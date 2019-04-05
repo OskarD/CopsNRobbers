@@ -126,33 +126,33 @@ namespace Server.DataModels.Teams
             }
         };
 
-        private static readonly Dictionary<Team, VehicleHash[]> Vehicles = new Dictionary<Team, VehicleHash[]>
+        private static readonly Dictionary<Team, Vehicle[]> Vehicles = new Dictionary<Team, Vehicle[]>
         {
             {
                 Team.None, new[]
                 {
-                    VehicleHash.Asea,
-                    VehicleHash.Asterope,
-                    VehicleHash.Emperor,
-                    VehicleHash.Premier
+                    new Vehicle(VehicleHash.Asea),
+                    new Vehicle(VehicleHash.Asterope),
+                    new Vehicle(VehicleHash.Emperor),
+                    new Vehicle(VehicleHash.Premier)
                 }
             },
             {
                 Team.Cops, new[]
                 {
-                    VehicleHash.Police,
-                    VehicleHash.Police2,
-                    VehicleHash.Police3
+                    new Vehicle(VehicleHash.Police, 0, 111),
+                    new Vehicle(VehicleHash.Police2, 0, 111),
+                    new Vehicle(VehicleHash.Police3, 0, 111)
                 }
             },
             {
                 Team.Robbers, new[]
                 {
-                    VehicleHash.Fugitive,
-                    VehicleHash.Tailgater,
-                    VehicleHash.Superd,
-                    VehicleHash.Schafter5,
-                    VehicleHash.Intruder
+                    new Vehicle(VehicleHash.Fugitive),
+                    new Vehicle(VehicleHash.Tailgater),
+                    new Vehicle(VehicleHash.Superd),
+                    new Vehicle(VehicleHash.Schafter5),
+                    new Vehicle(VehicleHash.Intruder)
                 }
             }
         };
@@ -179,7 +179,7 @@ namespace Server.DataModels.Teams
             return LoadOuts[team];
         }
 
-        public static VehicleHash GetVehicle(this Team team)
+        public static Vehicle GetVehicle(this Team team)
         {
             var randomizedIndex = Random.Next(0, Vehicles[team].Length);
             return Vehicles[team][randomizedIndex];

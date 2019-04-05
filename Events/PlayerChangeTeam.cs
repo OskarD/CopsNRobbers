@@ -40,11 +40,13 @@ namespace Server.Events
         {
             if (player.Vehicle != null) player.Vehicle.Delete();
 
+            var vehicle = player.Team.GetVehicle();
             player.Vehicle = NAPI.Vehicle.CreateVehicle(
-                player.Team.GetVehicle(),
+                vehicle.VehicleHash,
                 player.Client.Position,
                 0f,
-                0, 0,
+                vehicle.Color1,
+                vehicle.Color2,
                 player.Client.Name,
                 255,
                 false,

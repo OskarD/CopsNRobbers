@@ -1,6 +1,8 @@
+using System;
 using GTANetworkAPI;
 using Server.DataModels.Teams;
 using Server.Events;
+using Vehicle = GTANetworkAPI.Vehicle;
 
 namespace Server.DataModels
 {
@@ -41,8 +43,10 @@ namespace Server.DataModels
             }
         }
 
-        private bool IsInJobObjective => Client.Position.DistanceTo2D(CurrentJob.CurrentObjective.Position) <=
-                                         CurrentJob.CurrentObjective.Size;
+        private bool IsInJobObjective =>
+            Client.Position.DistanceTo2D(CurrentJob.CurrentObjective.Position) <= CurrentJob.CurrentObjective.Size
+            && Math.Abs(Client.Position.Z) - Math.Abs(CurrentJob.CurrentObjective.Position.Z) <
+            CurrentJob.CurrentObjective.Size;
 
         private void LoadJobObjective()
         {
@@ -54,10 +58,15 @@ namespace Server.DataModels
         {
             if (!IsInJobObjective) return;
 
+            CurrentJob.CurrentObjective.PostAction?.Invoke();
+
             CurrentJob.Objectives.Dequeue();
 
-            if (CurrentJob.CurrentObjective == null) CurrentJob = null;
-            ;
+            if (CurrentJob.CurrentObjective == null)
+            {
+                CurrentJob = null;
+                return;
+            }
 
             LoadJobObjective();
         }
