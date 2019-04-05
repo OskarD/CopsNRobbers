@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using GTANetworkAPI;
 
-namespace Server
+namespace Server.Handlers
 {
     // ReSharper disable once UnusedMember.Global
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
