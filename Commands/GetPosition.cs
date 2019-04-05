@@ -1,8 +1,10 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using GTANetworkAPI;
 
 namespace Server.Commands
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class GetPosition : Script
     {
         [Command("getpos")]

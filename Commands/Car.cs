@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using GTANetworkAPI;
 using Server.DataModels;
 
 namespace Server.Commands
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class Car : Script
     {
         [Command("car")]

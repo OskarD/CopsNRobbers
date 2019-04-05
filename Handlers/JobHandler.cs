@@ -2,6 +2,7 @@ using GTANetworkAPI;
 
 namespace Server
 {
+    // ReSharper disable once UnusedMember.Global
     public class JobHandler : Script
     {
         [RemoteEvent("job_objective_completed")]

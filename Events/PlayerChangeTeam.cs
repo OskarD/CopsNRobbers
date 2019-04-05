@@ -1,32 +1,47 @@
 using GTANetworkAPI;
 using Server.DataModels;
+using Server.DataModels.Teams;
 
 namespace Server.Events
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class PlayerChangeTeam
     {
         public static void OnPlayerChangeTeam(Player player)
         {
-            var playerTeam = player.Team;
+            player.Client.Team = player.Team.GetClientTeam(); // TODO: Delete, API not implemented yet
+            player.Client.SetSkin(player.Team.GetSkin());
+            SpawnPlayer(player);
+            SetPlayerWeapons(player);
+            CreatePlayerVehicle(player);
+        }
 
-            player.Client.Team = playerTeam.GetCientTeam(); // TODO: Delete, API not implemented yet
-
-            player.Client.SetSkin(playerTeam.GetSkin());
-
-            var spawnLocation = playerTeam.GetSpawnLocation();
+        private static void SpawnPlayer(Player player)
+        {
+            var spawn = player.Team.GetSpawn();
             NAPI.Player.SpawnPlayer(player.Client,
-                new Vector3(spawnLocation.Position.X, spawnLocation.Position.Y, spawnLocation.Position.Z),
-                spawnLocation.Rotation.Z);
-            player.Client.SendChatMessage(spawnLocation.Rotation.ToString());
+                new Vector3(spawn.Position.X, spawn.Position.Y, spawn.Position.Z),
+                spawn.Rotation.Z);
 
+            var animation = spawn.Animation;
+            if (animation != null)
+                player.Client.PlayAnimation(animation.AnimDict, animation.AnimName, animation.Flag);
+        }
+
+        private static void SetPlayerWeapons(Player player)
+        {
             player.Client.RemoveAllWeapons();
+            foreach (var loadOutWeapon in player.Team.GetLoadOut())
+                player.Client.GiveWeapon(loadOutWeapon.WeaponHash, loadOutWeapon.AmmoAmount);
+            player.Client.GiveWeapon(WeaponHash.Unarmed, 1);
+        }
 
-            foreach (var weaponHash in playerTeam.GetLoadout()) player.Client.GiveWeapon(weaponHash, 24);
-
+        private static void CreatePlayerVehicle(Player player)
+        {
             if (player.Vehicle != null) player.Vehicle.Delete();
 
             player.Vehicle = NAPI.Vehicle.CreateVehicle(
-                playerTeam.GetVehicle(),
+                player.Team.GetVehicle(),
                 player.Client.Position,
                 0f,
                 0, 0,

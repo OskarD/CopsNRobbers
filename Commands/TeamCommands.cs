@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using GTANetworkAPI;
-using Server.DataModels;
+using Server.DataModels.Teams;
 
 namespace Server.Commands
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class TeamCommands : Script
     {
         [Command("joincops")]
