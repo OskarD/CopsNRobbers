@@ -29,6 +29,16 @@ namespace Server.Commands
 
         private readonly Random _random = new Random();
 
+        [Command("color")]
+        public void CMD_Color(Client client, int color1, int color2)
+        {
+            if (!client.IsInVehicle)
+                return;
+
+            client.Vehicle.PrimaryColor = color1;
+            client.Vehicle.SecondaryColor = color2;
+        }
+
         [Command("car")]
         public void CMD_Car(Client client)
         {

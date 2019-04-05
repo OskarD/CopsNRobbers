@@ -140,9 +140,9 @@ namespace Server.DataModels.Teams
             {
                 Team.Cops, new[]
                 {
-                    new Vehicle(VehicleHash.Police, 0, 111),
-                    new Vehicle(VehicleHash.Police2, 0, 111),
-                    new Vehicle(VehicleHash.Police3, 0, 111)
+                    new Vehicle(VehicleHash.Police, 111, 1),
+                    new Vehicle(VehicleHash.Police2, 111, 1),
+                    new Vehicle(VehicleHash.Police3, 111, 1)
                 }
             },
             {
