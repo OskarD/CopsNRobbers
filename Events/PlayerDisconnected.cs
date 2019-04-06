@@ -7,7 +7,7 @@ namespace Server.Events
     {
         [ServerEvent(Event.PlayerDisconnected)]
         // ReSharper disable once UnusedMember.Global
-        public void OnPlayerDisconnected(Client client)
+        public void OnPlayerDisconnected(Client client, DisconnectionType type, string reason)
         {
             var player = ServerContext.GetPlayer(client);
 
