@@ -1,3 +1,4 @@
+using System;
 using GTANetworkAPI;
 using Server.DataModels;
 
@@ -11,6 +12,8 @@ namespace Server.Events
         public void OnPlayerConnected(Client client)
         {
             ServerContext.Players.Add(new Player(client));
+            NAPI.Chat.SendChatMessageToAll($"{client.Name} has connected.");
+            Console.WriteLine($"{client.Name} has connected.");
         }
     }
 }
