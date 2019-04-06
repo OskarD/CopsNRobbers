@@ -111,11 +111,24 @@ namespace Server.DataModels
             if (!CrimesCommitted.Contains(crime))
                 throw new ArgumentException($"Player {Client.Name} did not commit reported crime {crime}");
 
+            var previousWantedLevel = WantedLevel;
+
             RemoveWitnesses(crime);
             CrimesCommitted.Remove(crime);
             CrimesWantedFor.Add(crime);
+            Client.WantedLevel = WantedLevel;
 
-            PlayerWasReportedForCrime.OnPlayerWasReportedForCrime(this, crime);
+            // TODO: Refactor out of this place
+            if (WantedLevel > previousWantedLevel)
+            {
+                NotifyCops(crime, previousWantedLevel);
+
+                if (previousWantedLevel == 0)
+                    Client.SendChatMessage($"~r~You are now wanted! (Level {WantedLevel})");
+                else
+                    Client.SendChatMessage(
+                        $"~r~Your wanted level has been increased from {previousWantedLevel} to {WantedLevel}");
+            }
         }
 
         private void RemoveWitnesses(Crime crime)
@@ -125,6 +138,22 @@ namespace Server.DataModels
             {
                 if (player.CrimesWitnessed.Contains(crimeWitnessed)) player.CrimesWitnessed.Remove(crimeWitnessed);
             });
+        }
+
+        private void NotifyCops(Crime crime, int previousWantedLevel)
+        {
+            ServerContext.Players.FindAll(player => player.Team == Team.Cops).ForEach(cop =>
+            {
+                cop.Client.SendChatMessage(
+                    $"~b~Suspect {Client.Name} has received wanted level {WantedLevel}");
+            });
+        }
+
+        public void ResetStats()
+        {
+            CrimesCommitted.Clear();
+            CrimesWitnessed.Clear();
+            CrimesWantedFor.Clear();
         }
     }
 }

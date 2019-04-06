@@ -9,6 +9,7 @@ namespace Server.Events
     {
         public static void OnPlayerChangeTeam(Player player)
         {
+            player.ResetStats();
             player.Client.Team = player.Team.GetClientTeam();
             player.Client.SetSkin(player.Team.GetSkin());
             SpawnPlayer(player);
