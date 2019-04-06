@@ -1,6 +1,9 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
-using CopsNRobbersFrontend.Crimes;
+using CopsNRobbers_shared.DataModels;
+using CopsNRobbers_shared.DataModels.Crimes;
 using GTANetworkAPI;
+using Server.Events;
 
 namespace Server.Handlers
 {
@@ -9,21 +12,25 @@ namespace Server.Handlers
     public class CrimeHandler : Script
     {
         [RemoteEvent("crime_committed")]
-        public void Remote_Event_JobObjectiveCompleted(Client client, object[] arguments)
+        public void Remote_Event_CrimeCommitted(Client criminalClient, string crimeString)
         {
-            var crime = (Crime) arguments[0];
-            var player = ServerContext.GetPlayer(client);
-            client.SendChatMessage($"Received crime: {crime}");
-            // TODO: Add crimes to player
-            client.WantedLevel++; // TODO: Not implemented yet
+            if (ServerContext.GetPlayer(criminalClient).Team == Team.Cops) return;
 
-            foreach (var witnessClient in NAPI.Player.GetPlayersInRadiusOfPlayer(50, client))
+            var crime = (Crime) Enum.Parse(typeof(Crime), crimeString);
+            var witnesses = NAPI.Player.GetPlayersInRadiusOfPlayer(60, criminalClient);
+            if (witnesses.Count == 0)
+                return;
+
+            var criminalPlayer = ServerContext.GetPlayer(criminalClient);
+            criminalPlayer.CrimesCommitted.Add(crime);
+
+            foreach (var witnessClient in witnesses)
             {
-                if (witnessClient == client)
+                if (witnessClient == criminalClient)
                     continue;
 
-                client.SendChatMessage($"{witnessClient.Name} saw you!");
-                // TODO: Add crime in witness context
+                var witnessPlayer = ServerContext.GetPlayer(witnessClient);
+                PlayerWitnessedCrime.OnPlayerWitnessedCrime(witnessPlayer, criminalPlayer, crime);
             }
         }
     }

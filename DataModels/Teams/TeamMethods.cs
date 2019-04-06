@@ -1,16 +1,10 @@
 using System;
 using System.Collections.Generic;
+using CopsNRobbers_shared.DataModels;
 using GTANetworkAPI;
 
 namespace Server.DataModels.Teams
 {
-    public enum Team
-    {
-        None,
-        Cops,
-        Robbers
-    }
-
     internal static class TeamMethods
     {
         private static readonly Random Random = new Random();

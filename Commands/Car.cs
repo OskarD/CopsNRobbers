@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using CopsNRobbers_shared.DataModels;
 using GTANetworkAPI;
 using Server.DataModels;
 using Server.DataModels.Teams;

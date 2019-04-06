@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using CopsNRobbers_shared.DataModels;
 using GTANetworkAPI;
-using Server.DataModels.Teams;
 
 namespace Server.Commands
 {

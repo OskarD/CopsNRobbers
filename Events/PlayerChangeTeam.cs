@@ -9,7 +9,7 @@ namespace Server.Events
     {
         public static void OnPlayerChangeTeam(Player player)
         {
-            player.Client.Team = player.Team.GetClientTeam(); // TODO: Delete, API not implemented yet
+            player.Client.Team = player.Team.GetClientTeam();
             player.Client.SetSkin(player.Team.GetSkin());
             SpawnPlayer(player);
             SetPlayerWeapons(player);

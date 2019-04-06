@@ -1,8 +1,9 @@
 using System;
+using System.Collections.Generic;
+using CopsNRobbers_shared.DataModels;
+using CopsNRobbers_shared.DataModels.Crimes;
 using GTANetworkAPI;
-using Server.DataModels.Teams;
 using Server.Events;
-using Vehicle = GTANetworkAPI.Vehicle;
 
 namespace Server.DataModels
 {
@@ -48,6 +49,40 @@ namespace Server.DataModels
             && Math.Abs(Client.Position.Z) - Math.Abs(CurrentJob.CurrentObjective.Position.Z) <
             CurrentJob.CurrentObjective.Size;
 
+        public HashSet<KeyValuePair<Player, Crime>> CrimesWitnessed { get; } =
+            new HashSet<KeyValuePair<Player, Crime>>();
+
+        public HashSet<Crime> CrimesCommitted { get; } = new HashSet<Crime>();
+        public List<Crime> CrimesWantedFor { get; } = new List<Crime>();
+
+        public int OutstandingFines
+        {
+            get
+            {
+                var outstandingFines = 0;
+                CrimesWantedFor.ForEach(crime => { outstandingFines += crime.GetFine(); });
+                return outstandingFines;
+            }
+        }
+
+        public int WantedLevel
+        {
+            get
+            {
+                if (OutstandingFines == 0)
+                    return 0;
+                if (OutstandingFines < 500)
+                    return 1;
+                if (OutstandingFines < 3_000)
+                    return 2;
+                if (OutstandingFines < 10_000)
+                    return 3;
+                if (OutstandingFines < 20_000)
+                    return 4;
+                return 5;
+            }
+        }
+
         private void LoadJobObjective()
         {
             Client.TriggerEvent("load_job_objective", CurrentJob.CurrentObjective.Position,
@@ -69,6 +104,27 @@ namespace Server.DataModels
             }
 
             LoadJobObjective();
+        }
+
+        public void ReportForCrime(Crime crime)
+        {
+            if (!CrimesCommitted.Contains(crime))
+                throw new ArgumentException($"Player {Client.Name} did not commit reported crime {crime}");
+
+            RemoveWitnesses(crime);
+            CrimesCommitted.Remove(crime);
+            CrimesWantedFor.Add(crime);
+
+            PlayerWasReportedForCrime.OnPlayerWasReportedForCrime(this, crime);
+        }
+
+        private void RemoveWitnesses(Crime crime)
+        {
+            var crimeWitnessed = new KeyValuePair<Player, Crime>(this, crime);
+            ServerContext.Players.ForEach(player =>
+            {
+                if (player.CrimesWitnessed.Contains(crimeWitnessed)) player.CrimesWitnessed.Remove(crimeWitnessed);
+            });
         }
     }
 }

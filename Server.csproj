@@ -8,6 +8,9 @@
       <Reference Include="Bootstrapper, Version=0.3.7.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\..\runtime\Bootstrapper.dll</HintPath>
       </Reference>
+        <Reference Include="CopsNRobbers-shared, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\CopsNRobbers-shared\bin\Debug\netcoreapp2.2\CopsNRobbers-shared.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>
